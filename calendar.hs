@@ -18,7 +18,7 @@ data ListOfMonths = January | February | March
 
 allMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
---returns integer of first day of the month. Monday = 1 .. Sunday = 7
+--returns integer of first day of the month of specified year. Monday = 1 .. Sunday = 7
 firstDayOfMonth :: Integer -> Int -> Int
 firstDayOfMonth x y = read (formatTime defaultTimeLocale "%u" (fromGregorian x y 01)) :: Int
 
@@ -28,4 +28,5 @@ printCalendar year chosenMonth =
     then putStrLn $ "Please choose a month 1 thru 12"
     else do
       putStrLn $ show (firstDayOfMonth year chosenMonth)
-      putStrLn ""
+
+      putStrLn $ show (allMonths!!(chosenMonth-1))
