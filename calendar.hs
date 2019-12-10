@@ -16,16 +16,31 @@ data ListOfMonths = January | February | March
           | October | November | December
             deriving (Show, Eq, Ord, Enum)
 
-
+daysList = [1..31]
 weekDays = ["Su","Mo","Tu","We","Th","Fr","Sa"]
 allMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
-printDays :: Int -> IO ()
-printDays 7 = return ()
-printDays n =
+printWeekDays :: Int -> IO ()
+printWeekDays 7 = return ()
+printWeekDays n =
   do
     putStr $  (weekDays!!(n) ++ " ")
-    printDays(n+1)
+    printWeekDays(n+1)
+
+printDays :: Int -> Int -> IO ()
+printDays n numDays
+  | n == numDays =
+  do
+    putStr $ show (daysList!!(n-1))
+  | otherwise =
+  do
+    putStr " "
+    putStr $ show (daysList!!(n-1))
+    putStr " "
+    printDays (n+1) numDays
+
+daysInMonth :: Integer -> Int -> Int
+daysInMonth year month = gregorianMonthLength year month
 
 --returns integer of first day of the month of specified year. Monday = 1 .. Sunday = 7
 firstDayOfMonth :: Integer -> Int -> Int
@@ -39,5 +54,7 @@ printCalendar year chosenMonth =
       putStrLn $ show (firstDayOfMonth year chosenMonth)
 
       putStrLn $ "\t" ++ allMonths!!(chosenMonth-1)
-      printDays 0
+      printWeekDays 0
+      putStrLn ""
+      printDays 1 (daysInMonth year chosenMonth)
       putStrLn "\n"
