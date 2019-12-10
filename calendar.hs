@@ -27,17 +27,41 @@ printWeekDays n =
     putStr $  (weekDays!!(n) ++ " ")
     printWeekDays(n+1)
 
-printDays :: Int -> Int -> IO ()
-printDays n numDays
+printDays :: Int -> Int -> Int -> IO ()
+printDays n numDays firstDayNum
   | n == numDays =
   do
+    putStr " "
     putStr $ show (daysList!!(n-1))
+  | (n<10) && (n + firstDayNum -1)`mod` 7 == 0 =
+  do
+    putStr "\n"
+    putStr " "
+    putStr $ show (daysList!!(n-1))
+    printDays (n+1) numDays firstDayNum
+  | (n + firstDayNum -1)`mod` 7 == 0 =
+  do
+    putStr "\n"
+    putStr $ show (daysList!!(n-1))
+    printDays (n+1) numDays firstDayNum
+  | n < 10 =
+  do
+    putStr "  "
+    putStr $ show (daysList!!(n-1))
+    printDays (n+1) numDays firstDayNum
   | otherwise =
   do
     putStr " "
     putStr $ show (daysList!!(n-1))
-    putStr " "
-    printDays (n+1) numDays
+    printDays (n+1) numDays firstDayNum
+
+
+printFirstDaySpacing :: Int -> IO ()
+printFirstDaySpacing 0 = return ()
+printFirstDaySpacing n =
+  do
+    putStr $ "  "
+    printFirstDaySpacing (n-1)
 
 daysInMonth :: Integer -> Int -> Int
 daysInMonth year month = gregorianMonthLength year month
@@ -56,5 +80,6 @@ printCalendar year chosenMonth =
       putStrLn $ "\t" ++ allMonths!!(chosenMonth-1)
       printWeekDays 0
       putStrLn ""
-      printDays 1 (daysInMonth year chosenMonth)
+      printFirstDaySpacing ((firstDayOfMonth year chosenMonth) + 1)
+      printDays 1 (daysInMonth year chosenMonth) (firstDayOfMonth year chosenMonth)
       putStrLn "\n"
