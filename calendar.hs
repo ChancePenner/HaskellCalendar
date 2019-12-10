@@ -6,16 +6,6 @@ import Data.List.Split (chunksOf)
 import Data.List
 import Data.Time.Format
 
-
-data Days = Su | Mo | Tu | We | Th | Fr | Sa
-           deriving (Show, Eq, Ord, Enum)
-
-data ListOfMonths = January | February | March
-          | April   | May      | June
-          | July    | August   | September
-          | October | November | December
-            deriving (Show, Eq, Ord, Enum)
-
 daysList = [1..31]
 weekDays = ["Su","Mo","Tu","We","Th","Fr","Sa"]
 allMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
@@ -27,38 +17,42 @@ printWeekDays n =
     putStr $  (weekDays!!(n) ++ " ")
     printWeekDays(n+1)
 
+
 printDays :: Int -> Int -> Int -> IO ()
 printDays n numDays firstDayNum
   | n > numDays =
     return ()
-  -- do
-    -- putStr " "
-    -- putStr $ show (daysList!!(n-1))
-  | (n<10) && (n + firstDayNum -1)`mod` 7 == 0 =
+  | n == 1 && firstDayNum == 7 =
   do
-    putStr "\n"
-    putStr " "
+    putStr " "  --if first day is Sunday, spacing is one less
     putStr $ show (daysList!!(n-1))
     printDays (n+1) numDays firstDayNum
-  | (n + firstDayNum -1)`mod` 7 == 0 =
-  do
+  | (n>1) && (n<10) && (n + firstDayNum -1)`mod` 7 == 0 =
+  do --newline after each week. n>1 since if starts on Sunday, no newline needed
+    putStr "\n"
+    putStr " "  --since still in single digit days, need this space
+    putStr $ show (daysList!!(n-1))
+    printDays (n+1) numDays firstDayNum
+  | (n>=10) && (n + firstDayNum -1)`mod` 7 == 0 =
+  do --newline after each week. since in double digit days, no space needed, unlike above
     putStr "\n"
     putStr $ show (daysList!!(n-1))
     printDays (n+1) numDays firstDayNum
   | n < 10 =
   do
-    putStr "  "
+    putStr "  " --since in single digit days, need this spacing
     putStr $ show (daysList!!(n-1))
     printDays (n+1) numDays firstDayNum
   | otherwise =
   do
-    putStr " "
+    putStr " "  --since in double digit days, need less spacing
     putStr $ show (daysList!!(n-1))
     printDays (n+1) numDays firstDayNum
 
 
 printFirstDaySpacing :: Int -> IO ()
-printFirstDaySpacing 1 = return ()
+printFirstDaySpacing 1 = return ()  --if down to 1, no more spaces needed
+printFirstDaySpacing 8 = return ()  --if Sunday, don't need to move at all
 printFirstDaySpacing 2 =
   do
     putStr $ "  "
@@ -79,8 +73,7 @@ printCalendar year chosenMonth =
   if chosenMonth < 1 || chosenMonth > 12
     then putStrLn $ "Please choose a month 1 thru 12"
     else do
-      putStrLn $ show (firstDayOfMonth year chosenMonth)
-
+      putStr "\n      Calendar By:\n      Chance Penner\n\n"
       putStrLn $ "\t" ++ allMonths!!(chosenMonth-1)
       printWeekDays 0
       putStrLn ""
