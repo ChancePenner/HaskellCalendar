@@ -29,10 +29,11 @@ printWeekDays n =
 
 printDays :: Int -> Int -> Int -> IO ()
 printDays n numDays firstDayNum
-  | n == numDays =
-  do
-    putStr " "
-    putStr $ show (daysList!!(n-1))
+  | n > numDays =
+    return ()
+  -- do
+    -- putStr " "
+    -- putStr $ show (daysList!!(n-1))
   | (n<10) && (n + firstDayNum -1)`mod` 7 == 0 =
   do
     putStr "\n"
@@ -57,10 +58,13 @@ printDays n numDays firstDayNum
 
 
 printFirstDaySpacing :: Int -> IO ()
-printFirstDaySpacing 0 = return ()
-printFirstDaySpacing n =
+printFirstDaySpacing 1 = return ()
+printFirstDaySpacing 2 =
   do
     putStr $ "  "
+printFirstDaySpacing n =
+  do
+    putStr $ "   "
     printFirstDaySpacing (n-1)
 
 daysInMonth :: Integer -> Int -> Int
