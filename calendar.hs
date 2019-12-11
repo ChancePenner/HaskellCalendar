@@ -1,9 +1,5 @@
-import qualified Data.Text as T
-import Data.Time
+--By Chance Penner
 import Data.Time.Calendar
-import Data.Time.Calendar.WeekDate
-import Data.List.Split (chunksOf)
-import Data.List
 import Data.Time.Format
 
 daysList = [1..31]
